@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#FFB3C6">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Kupu-Kupu">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<title>🦋 Petualangan Metamorfosis Kupu-Kupu</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --pink: #FFB3C6;
+    --pink-light: #FFD6E0;
+    --yellow: #FFF0A0;
+    --yellow-warm: #FFE566;
+    --peach: #FFCBA4;
+    --lavender: #D4B8E0;
+    --lavender-light: #E8D5F5;
+    --mint: #B8F0D8;
+    --mint-light: #D4FAE8;
+    --sky: #C8E8FF;
+    --sky-light: #E8F5FF;
+    --green: #90D870;
+    --white: #FFFEF8;
+    --text-dark: #5A3E28;
+    --text-mid: #7A5C3C;
+  }
+
+  body {
+    font-family: 'Nunito', 'Comic Sans MS', cursive, sans-serif;
+    background: var(--sky-light);
+    overflow-x: hidden;
+    min-height: 100vh;
+    color: var(--text-dark);
+  }
+
+  /* ===== SLIDE SYSTEM ===== */
+  .slide { display: none; min-height: 100vh; position: relative; overflow: hidden; }
+  .slide.active { display: flex; flex-direction: column; align-items: center; }
+
+  /* ===== SKY BACKGROUND ===== */
+  .sky-bg {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(180deg, #C8E8FF 0%, #E8F5FF 50%, #D4FAE8 80%, #90D870 100%);
+    z-index: -10; pointer-events: none;
+  }
+  .ground {
+    position: fixed; bottom: 0; left: 0; width: 100%; height: 80px;
+    background: linear-gradient(180deg, #90D870 0%, #68C048 100%);
+    z-index: -9; border-radius: 60% 60% 0 0 / 20px 20px 0 0;
+  }
+
+  /* ===== CLOUDS ===== */
+  .cloud { position: fixed; background: white; border-radius: 50px; opacity: 0.85; z-index: -8; }
+  .cloud::before, .cloud::after { content: ''; position: absolute; background: white; border-radius: 50%; }
+  .cloud-1 { width: 130px; height: 45px; top: 8%; left: -10%; animation: cloudMove 25s linear infinite; }
+  .cloud-1::before { width: 60px; height: 60px; top: -25px; left: 20px; }
+  .cloud-1::after { width: 45px; height: 45px; top: -18px; left: 55px; }
+  .cloud-2 { width: 100px; height: 35px; top: 18%; left: -8%; animation: cloudMove 35s linear infinite 10s; }
+  .cloud-2::before { width: 50px; height: 50px; top: -20px; left: 15px; }
+  .cloud-2::after { width: 38px; height: 38px; top: -15px; left: 45px; }
+  .cloud-3 { width: 90px; height: 32px; top: 5%; left: 70%; animation: cloudMove 28s linear infinite 5s; }
+  .cloud-3::before { width: 40px; height: 40px; top: -18px; left: 15px; }
+  .cloud-3::after { width: 35px; height: 35px; top: -12px; left: 40px; }
+
+  @keyframes cloudMove {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(100vw + 200px)); }
+  }
+
+  /* ===== DECO BUTTERFLIES ===== */
+  .deco-butterfly {
+    position: fixed; font-size: 2rem; z-index: -5; pointer-events: none;
+    animation: floatBy 18s ease-in-out infinite;
+    opacity: 0.7;
+  }
+  .db1 { top: 15%; left: 5%; animation-delay: 0s; font-size: 1.5rem; }
+  .db2 { top: 40%; right: 8%; animation-delay: 6s; font-size: 2rem; }
+  .db3 { top: 70%; left: 10%; animation-delay: 12s; font-size: 1.2rem; }
+
+  @keyframes floatBy {
+    0%, 100% { transform: translate(0, 0) rotate(-5deg); }
+    25% { transform: translate(30px, -20px) rotate(5deg); }
+    50% { transform: translate(10px, -40px) rotate(-5deg); }
+    75% { transform: translate(-20px, -20px) rotate(5deg); }
+  }
+
+  /* ===== DECO FLOWERS ===== */
+  .deco-flowers {
+    position: fixed; bottom: 55px; left: 0; width: 100%;
+    display: flex; justify-content: space-around; z-index: -7; pointer-events: none;
+    padding: 0 10px;
+  }
+  .deco-flower { font-size: 1.8rem; animation: sway 3s ease-in-out infinite; }
+  .deco-flower:nth-child(2) { animation-delay: 0.5s; }
+  .deco-flower:nth-child(3) { animation-delay: 1s; }
+  .deco-flower:nth-child(4) { animation-delay: 1.5s; }
+  .deco-flower:nth-child(5) { animation-delay: 2s; }
+  .deco-flower:nth-child(6) { animation-delay: 0.8s; }
+  .deco-flower:nth-child(7) { animation-delay: 1.3s; }
+  .deco-flower:nth-child(8) { animation-delay: 1.8s; }
+
+  @keyframes sway {
+    0%, 100% { transform: rotate(-5deg) scale(1); }
+    50% { transform: rotate(5deg) scale(1.05); }
+  }
+
+  /* ===== RAINBOW ===== */
+  .rainbow {
+    position: fixed; top: 0; right: -50px; width: 350px; height: 200px;
+    border-radius: 0 0 0 100%;
+    background: conic-gradient(from 90deg at 100% 0%,
+      #FF6B6B 0deg 15deg, #FFA500 15deg 30deg, #FFE500 30deg 45deg,
+      #90EE90 45deg 60deg, #87CEEB 60deg 75deg, #9B59B6 75deg 90deg);
+    opacity: 0.25; z-index: -6; pointer-events: none;
+    border-radius: 0 0 0 300px;
+  }
+
+  /* ===== CONTENT WRAPPER ===== */
+  .content { width: 100%; max-width: 900px; padding: 20px 20px 100px; z-index: 1; }
+
+  /* ===== NAV BUTTONS ===== */
+  .nav-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: center; gap: 16px;
+    padding: 10px 20px 14px;
+    background: linear-gradient(transparent, rgba(255,255,255,0.9));
+  }
+  .btn {
+    font-family: 'Nunito', cursive; font-size: 1.1rem; font-weight: 800;
+    border: none; cursor: pointer; border-radius: 50px; padding: 12px 28px;
+    display: inline-flex; align-items: center; gap: 8px;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.15), 0 6px 16px rgba(0,0,0,0.1);
+    transition: transform 0.1s, box-shadow 0.1s;
+    text-decoration: none; white-space: nowrap;
+  }
+  .btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.1); }
+  .btn-home { background: var(--lavender); color: var(--text-dark); }
+  .btn-next { background: var(--pink); color: var(--text-dark); }
+  .btn-start { background: linear-gradient(135deg, var(--pink) 0%, var(--peach) 100%); color: var(--text-dark); font-size: 1.4rem; padding: 16px 40px; }
+  .btn-cert { background: linear-gradient(135deg, var(--yellow) 0%, var(--peach) 100%); color: var(--text-dark); font-size: 1.1rem; }
+  .btn-print { background: linear-gradient(135deg, var(--mint) 0%, var(--sky) 100%); color: var(--text-dark); font-size: 1.1rem; }
+
+  /* ===== PAGE TITLE ===== */
+  .page-title {
+    text-align: center; font-size: 1.6rem; font-weight: 900;
+    color: var(--text-dark); margin: 20px 0 8px;
+    text-shadow: 2px 2px 0 rgba(255,255,255,0.8);
+  }
+  .page-subtitle {
+    text-align: center; font-size: 1rem; font-weight: 700;
+    color: var(--text-mid); margin-bottom: 20px;
+    background: rgba(255,255,255,0.7); border-radius: 20px; padding: 6px 18px; display: inline-block;
+  }
+
+  /* ===== SLIDE 0: INTRO ===== */
+  .intro-wrap { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 30px 20px 100px; }
+  .intro-title {
+    font-size: clamp(1.8rem, 5vw, 2.8rem); font-weight: 900; color: var(--text-dark);
+    text-shadow: 3px 3px 0 rgba(255,255,255,0.9), 0 4px 12px rgba(0,0,0,0.1);
+    margin: 20px 0 10px; line-height: 1.3;
+  }
+  .intro-sub {
+    font-size: clamp(1rem, 3vw, 1.3rem); font-weight: 700; color: #8B6FCC;
+    background: rgba(255,255,255,0.8); border-radius: 30px; padding: 10px 24px; margin-bottom: 30px;
+  }
+  .hero-butterfly {
+    font-size: clamp(5rem, 20vw, 9rem); animation: wingFlap 1.2s ease-in-out infinite;
+    filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
+    margin: 10px 0;
+  }
+  @keyframes wingFlap {
+    0%, 100% { transform: scaleX(1) rotate(-3deg); }
+    50% { transform: scaleX(0.7) rotate(3deg); }
+  }
+  @keyframes bounceIn {
+    0%   { transform: scale(0); }
+    60%  { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+  .intro-flowers { display: flex; gap: 12px; font-size: 2rem; margin: 10px 0 30px; }
+  .intro-flower { animation: sway 2.5s ease-in-out infinite; }
+  .intro-flower:nth-child(2) { animation-delay: 0.4s; }
+  .intro-flower:nth-child(3) { animation-delay: 0.8s; }
+
+  /* ===== SLIDE 1: MATERI ===== */
+  .cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; width: 100%; }
+  @media (max-width: 600px) { .cards-grid { grid-template-columns: 1fr; } }
+
+  .stage-card {
+    background: white; border-radius: 24px; padding: 24px 16px;
+    text-align: center; cursor: pointer;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.12), 0 8px 24px rgba(0,0,0,0.08);
+    border: 3px solid transparent;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .stage-card:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 8px 0 rgba(0,0,0,0.12), 0 16px 32px rgba(0,0,0,0.1); }
+  .stage-card:active { transform: translateY(0) scale(0.98); }
+  .stage-card.egg { background: linear-gradient(135deg, #fff9e0 0%, #fffce8 100%); border-color: var(--yellow-warm); }
+  .stage-card.caterpillar { background: linear-gradient(135deg, #e8fce8 0%, #f0fff0 100%); border-color: var(--mint); }
+  .stage-card.cocoon { background: linear-gradient(135deg, #f5f0e0 0%, #faf8f0 100%); border-color: #D4B88A; }
+  .stage-card.butterfly { background: linear-gradient(135deg, #ffe8f0 0%, #fff0f8 100%); border-color: var(--pink); }
+  .stage-emoji { font-size: 4rem; margin-bottom: 12px; display: block; animation: bounceIn 0.5s ease; }
+  .stage-name { font-size: 1.4rem; font-weight: 900; color: var(--text-dark); }
+  .stage-tap { font-size: 0.85rem; font-weight: 700; color: var(--text-mid); margin-top: 6px; opacity: 0.7; }
+
+  /* ===== POPUP ===== */
+  .popup-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 500;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+  .popup-overlay.show { opacity: 1; pointer-events: all; }
+  .popup-box {
+    background: white; border-radius: 30px; padding: 32px 28px; max-width: 360px; width: 90%;
+    text-align: center; position: relative;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+    transform: scale(0.8); transition: transform 0.3s;
+    border: 4px solid var(--pink);
+  }
+  .popup-overlay.show .popup-box { transform: scale(1); }
+  .popup-emoji { font-size: 5rem; animation: popBounce 0.6s ease; }
+  .popup-title { font-size: 1.5rem; font-weight: 900; margin: 12px 0 8px; }
+  .popup-text { font-size: 1.05rem; font-weight: 600; color: var(--text-mid); line-height: 1.6; }
+  .popup-close {
+    margin-top: 20px; background: var(--pink); border: none; border-radius: 30px;
+    padding: 10px 28px; font-family: 'Nunito', cursive; font-size: 1rem; font-weight: 800;
+    cursor: pointer; color: var(--text-dark); box-shadow: 0 3px 0 rgba(0,0,0,0.15);
+  }
+
+  @keyframes popBounce {
+    0% { transform: scale(0) rotate(-20deg); }
+    60% { transform: scale(1.2) rotate(5deg); }
+    100% { transform: scale(1) rotate(0); }
+  }
+
+  /* ===== GAME 1: DRAG DROP ===== */
+  .drag-instruction {
+    background: rgba(255,255,255,0.85); border-radius: 20px; padding: 12px 20px;
+    font-size: 1rem; font-weight: 700; color: var(--text-mid); text-align: center; margin-bottom: 20px;
+  }
+  .drag-items { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-bottom: 28px; }
+  .drag-card {
+    background: white; border-radius: 20px; padding: 16px 14px; width: 130px; text-align: center;
+    cursor: grab; box-shadow: 0 4px 0 rgba(0,0,0,0.1), 0 8px 20px rgba(0,0,0,0.08);
+    border: 3px solid var(--pink-light); user-select: none; touch-action: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .drag-card:active { cursor: grabbing; transform: scale(1.08) rotate(3deg); box-shadow: 0 12px 30px rgba(0,0,0,0.2); }
+  .drag-card.dragging { opacity: 0.5; transform: scale(1.1); }
+  .drag-emoji { font-size: 2.5rem; display: block; margin-bottom: 6px; }
+  .drag-label { font-size: 0.9rem; font-weight: 800; color: var(--text-dark); }
+
+  .drop-zone-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; }
+  .drop-zone {
+    width: 130px; height: 120px; border-radius: 20px;
+    border: 3px dashed var(--pink); background: rgba(255,255,255,0.6);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 700; color: var(--text-mid);
+    transition: background 0.2s, border-color 0.2s;
+    position: relative;
+  }
+  .drop-zone.dragover { background: var(--pink-light); border-color: #FF6B9D; border-style: solid; }
+  .drop-zone.filled { border-style: solid; border-color: var(--mint); background: var(--mint-light); }
+  .drop-zone .zone-num {
+    position: absolute; top: 6px; left: 10px;
+    font-size: 1.1rem; font-weight: 900; color: var(--lavender);
+  }
+  .drop-zone .placed-emoji { font-size: 2.5rem; }
+  .drop-zone .placed-label { font-size: 0.82rem; font-weight: 800; color: var(--text-dark); }
+
+  .g1-btn-check {
+    display: block; margin: 16px auto 0; background: linear-gradient(135deg, var(--pink) 0%, var(--peach) 100%);
+    border: none; border-radius: 30px; padding: 14px 36px;
+    font-family: 'Nunito', cursive; font-size: 1.1rem; font-weight: 800; cursor: pointer;
+    color: var(--text-dark); box-shadow: 0 4px 0 rgba(0,0,0,0.12);
+  }
+
+  /* ===== GAME 2: QUIZ ===== */
+  .quiz-progress {
+    display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap;
+  }
+  .quiz-dot {
+    width: 18px; height: 18px; border-radius: 50%; background: rgba(255,255,255,0.6);
+    border: 2px solid var(--pink); transition: background 0.3s;
+  }
+  .quiz-dot.done { background: var(--yellow-warm); border-color: #E8A800; }
+  .quiz-dot.correct { background: var(--mint); border-color: #40B87A; }
+  .quiz-dot.wrong { background: var(--pink); border-color: #FF6B9D; }
+
+  .quiz-card {
+    background: white; border-radius: 28px; padding: 28px; width: 100%;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.1), 0 8px 24px rgba(0,0,0,0.08);
+    text-align: center;
+  }
+  .quiz-sequence {
+    display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px;
+    margin: 20px 0 28px;
+  }
+  .quiz-stage {
+    background: var(--sky-light); border-radius: 16px; padding: 14px 12px;
+    font-size: 1rem; font-weight: 800; color: var(--text-dark); min-width: 80px; text-align: center;
+  }
+  .quiz-stage.missing {
+    background: var(--lavender-light); border: 3px dashed var(--lavender); color: var(--lavender);
+    font-size: 2.5rem; padding: 16px 20px;
+  }
+  .quiz-arrow { font-size: 1.5rem; color: var(--text-mid); }
+
+  .quiz-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 4px; }
+  .quiz-opt {
+    background: white; border: 3px solid var(--lavender-light); border-radius: 16px;
+    padding: 14px 8px; cursor: pointer; font-family: 'Nunito', cursive;
+    font-size: 0.95rem; font-weight: 800; color: var(--text-dark);
+    transition: transform 0.15s, background 0.15s;
+    box-shadow: 0 3px 0 rgba(0,0,0,0.08);
+  }
+  .quiz-opt:hover { transform: translateY(-2px); background: var(--lavender-light); }
+  .quiz-opt.correct-ans { background: var(--mint-light); border-color: #40B87A; }
+  .quiz-opt.wrong-ans { background: #FFE0E0; border-color: #FF6B6B; }
+
+  .score-display {
+    display: flex; justify-content: center; gap: 6px; margin-top: 20px;
+  }
+  .score-star { font-size: 1.8rem; transition: transform 0.3s; }
+  .score-star.earned { animation: starPop 0.4s ease forwards; }
+  @keyframes starPop { 0% { transform: scale(0); } 70% { transform: scale(1.3); } 100% { transform: scale(1); } }
+
+  /* ===== GAME 3 ===== */
+  .g3-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .g3-card {
+    background: white; border-radius: 24px; padding: 20px 14px;
+    text-align: center; cursor: pointer;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.1), 0 8px 20px rgba(0,0,0,0.07);
+    border: 3px solid var(--mint-light);
+    transition: transform 0.2s, box-shadow 0.2s;
+    user-select: none;
+  }
+  .g3-card:hover { transform: translateY(-3px); }
+  .g3-card.selected { border-color: var(--pink); background: var(--pink-light); }
+  .g3-card.correct-pick { border-color: #40B87A; background: var(--mint-light); }
+  .g3-card.wrong-pick { border-color: #FF6B6B; background: #FFE8E8; }
+  .g3-emoji { font-size: 3rem; margin-bottom: 8px; }
+  .g3-label { font-size: 0.95rem; font-weight: 800; color: var(--text-dark); }
+  .g3-check-btn {
+    display: block; margin: 20px auto 0; background: linear-gradient(135deg, var(--mint) 0%, var(--sky) 100%);
+    border: none; border-radius: 30px; padding: 14px 36px;
+    font-family: 'Nunito', cursive; font-size: 1.1rem; font-weight: 800; cursor: pointer;
+    color: var(--text-dark); box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+  }
+
+  /* ===== PESAN KARAKTER ===== */
+  .char-cloud {
+    background: rgba(255,255,255,0.9); border-radius: 40px; padding: 28px 30px;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.1); border: 4px solid var(--lavender);
+    text-align: center; position: relative; margin: 10px 0;
+  }
+  .char-cloud::before {
+    content: ''; position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 16px solid transparent; border-right: 16px solid transparent;
+    border-top: 20px solid rgba(255,255,255,0.9);
+  }
+  .char-text { font-size: 1.1rem; font-weight: 700; color: var(--text-dark); line-height: 1.7; }
+  .char-icons { display: flex; justify-content: center; gap: 20px; margin-top: 20px; font-size: 3rem; }
+  .char-icon { animation: bounceChar 2s ease-in-out infinite; }
+  .char-icon:nth-child(2) { animation-delay: 0.4s; }
+  .char-icon:nth-child(3) { animation-delay: 0.8s; }
+  @keyframes bounceChar {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  /* ===== CERTIFICATE ===== */
+  .cert-wrap { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 20px; }
+  .cert-name-input {
+    background: white; border: 3px solid var(--pink); border-radius: 20px;
+    padding: 12px 20px; font-family: 'Nunito', cursive; font-size: 1.1rem; font-weight: 700;
+    width: 100%; max-width: 340px; text-align: center; outline: none; margin-bottom: 20px;
+    box-shadow: 0 3px 0 rgba(0,0,0,0.08);
+  }
+  .certificate {
+    background: white; border-radius: 30px; padding: 32px 28px;
+    max-width: 500px; width: 100%; position: relative; overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+    display: none;
+  }
+  .certificate.show { display: block; }
+  .cert-border {
+    position: absolute; inset: 8px; border-radius: 24px;
+    border: 4px solid var(--pink-light); pointer-events: none;
+  }
+  .cert-border-inner {
+    position: absolute; inset: 14px; border-radius: 20px;
+    border: 2px dashed var(--lavender); pointer-events: none;
+  }
+  .cert-bg-flower {
+    position: absolute; font-size: 3rem; opacity: 0.08; pointer-events: none;
+  }
+  .cert-title { font-size: 1.5rem; font-weight: 900; color: var(--text-dark); margin: 8px 0; }
+  .cert-subtitle { font-size: 0.95rem; font-weight: 700; color: var(--text-mid); margin-bottom: 16px; }
+  .cert-hero { font-size: 4rem; margin: 8px 0; animation: wingFlap 1.5s ease-in-out infinite; }
+  .cert-name-display { font-size: 1.8rem; font-weight: 900; color: #8B6FCC; margin: 8px 0; }
+  .cert-stars { font-size: 2rem; letter-spacing: 4px; margin: 8px 0; }
+  .cert-flying-butterfly {
+    position: absolute; font-size: 1.5rem;
+    animation: flyCert 4s linear infinite;
+    pointer-events: none;
+  }
+  @keyframes flyCert {
+    from { left: -20px; top: 30%; transform: translateY(0); }
+    25% { transform: translateY(-30px); }
+    50% { transform: translateY(10px); }
+    75% { transform: translateY(-20px); }
+    to { left: 110%; top: 60%; transform: translateY(0); }
+  }
+  .cert-floating-star {
+    position: fixed; pointer-events: none; font-size: 1.5rem; z-index: 200;
+    animation: starFly 1.5s ease-out forwards;
+  }
+  @keyframes starFly {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-100px) scale(0.3); }
+  }
+
+  /* ===== CONFETTI ===== */
+  .confetti-piece {
+    position: fixed; width: 12px; height: 12px; z-index: 400;
+    border-radius: 3px; pointer-events: none;
+    animation: confettiFall linear forwards;
+  }
+  @keyframes confettiFall {
+    0% { opacity: 1; transform: translateY(0) rotate(0deg); }
+    100% { opacity: 0; transform: translateY(100vh) rotate(720deg); }
+  }
+
+  /* ===== FEEDBACK BANNER ===== */
+  .feedback {
+    border-radius: 20px; padding: 16px 20px; text-align: center; margin-top: 16px;
+    font-size: 1.1rem; font-weight: 800; display: none;
+  }
+  .feedback.success { background: var(--mint-light); color: #2A8A50; border: 3px solid #40B87A; }
+  .feedback.error { background: #FFE8E8; color: #CC4444; border: 3px solid #FF8888; }
+  .feedback.show { display: block; animation: feedbackPop 0.4s ease; }
+  @keyframes feedbackPop { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+  /* ===== STEP PROGRESS ===== */
+  .step-indicator {
+    display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap;
+  }
+  .step-dot {
+    width: 12px; height: 12px; border-radius: 50%;
+    background: rgba(255,255,255,0.5); border: 2px solid var(--pink);
+    transition: background 0.3s;
+  }
+  .step-dot.active { background: var(--pink); }
+
+  /* ===== MISC ===== */
+  .section-emoji-title {
+    font-size: clamp(1.3rem, 4vw, 1.8rem); font-weight: 900; text-align: center;
+    margin: 16px 0 6px;
+    text-shadow: 2px 2px 0 rgba(255,255,255,0.9);
+  }
+  .section-desc {
+    background: rgba(255,255,255,0.75); border-radius: 16px; padding: 10px 18px;
+    font-size: 0.95rem; font-weight: 700; color: var(--text-mid);
+    text-align: center; margin-bottom: 18px;
+  }
+  .quiz-qnum {
+    font-size: 0.9rem; font-weight: 800; color: var(--lavender); margin-bottom: 8px;
+  }
+  .quiz-question { font-size: 1.15rem; font-weight: 900; color: var(--text-dark); margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<!-- Background Elements -->
+<div class="sky-bg"></div>
+<div class="ground"></div>
+<div class="rainbow"></div>
+<div class="cloud cloud-1"></div>
+<div class="cloud cloud-2"></div>
+<div class="cloud cloud-3"></div>
+<div class="deco-butterfly db1">🦋</div>
+<div class="deco-butterfly db2">🦋</div>
+<div class="deco-butterfly db3">🦋</div>
+<div class="deco-flowers">
+  <span class="deco-flower">🌸</span>
+  <span class="deco-flower">🌼</span>
+  <span class="deco-flower">🌺</span>
+  <span class="deco-flower">🌷</span>
+  <span class="deco-flower">🌸</span>
+  <span class="deco-flower">🌼</span>
+  <span class="deco-flower">🌺</span>
+  <span class="deco-flower">🌷</span>
+</div>
+
+<!-- POPUP -->
+<div class="popup-overlay" id="popup" onclick="closePopup(event)">
+  <div class="popup-box" id="popupBox">
+    <div class="popup-emoji" id="popupEmoji">🥚</div>
+    <div class="popup-title" id="popupTitle">Telur</div>
+    <div class="popup-text" id="popupText"></div>
+    <button class="popup-close" onclick="closePopup()">✨ Tutup</button>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- SLIDE 0: INTRO -->
+<!-- ========================================== -->
+<div class="slide active" id="slide-0">
+  <div class="intro-wrap content">
+    <div class="step-indicator">
+      <div class="step-dot active"></div>
+      <div class="step-dot"></div>
+      <div class="step-dot"></div>
+      <div class="step-dot"></div>
+      <div class="step-dot"></div>
+      <div class="step-dot"></div>
+      <div class="step-dot"></div>
+    </div>
+    <div class="hero-butterfly">🦋</div>
+    <div class="intro-title">🦋 Petualangan<br>Metamorfosis<br>Kupu-Kupu</div>
+    <div class="intro-sub">✨ Ayo belajar bagaimana kupu-kupu<br>tumbuh dan berubah! ✨</div>
+    <div class="intro-flowers">
+      <span class="intro-flower">🌸</span>
+      <span class="intro-flower">🌼</span>
+      <span class="intro-flower">🌺</span>
+      <span class="intro-flower">🌷</span>
+      <span class="intro-flower">🌸</span>
+    </div>
+    <button class="btn btn-start" onclick="goTo(1)">🌸 Mulai Belajar!</button>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- SLIDE 1: MATERI -->
+<!-- ========================================== -->
+<div class="slide" id="slide-1">
+  <div class="content">
+    <div class="step-indicator" id="si1"></div>
+    <div class="section-emoji-title">🦋 Mari Berkenalan dengan Kupu-Kupu! 🦋</div>
+    <div class="section-desc">✋ Ketuk setiap kartu untuk belajar tahapan metamorfosis!</div>
+    <div class="cards-grid">
+      <div class="stage-card egg" onclick="openPopup('egg')" role="button" tabindex="0">
+        <span class="stage-emoji">🥚</span>
+        <div class="stage-name">Telur</div>
+        <div class="stage-tap">👆 Ketuk untuk belajar!</div>
+      </div>
+      <div class="stage-card caterpillar" onclick="openPopup('caterpillar')" role="button" tabindex="0">
+        <span class="stage-emoji">🐛</span>
+        <div class="stage-name">Ulat</div>
+        <div class="stage-tap">👆 Ketuk untuk belajar!</div>
+      </div>
+      <div class="stage-card cocoon" onclick="openPopup('cocoon')" role="button" tabindex="0">
+        <span class="stage-emoji">🟤</span>
+        <div class="stage-name">Kepompong</div>
+        <div class="stage-tap">👆 Ketuk untuk belajar!</div>
+      </div>
+      <div class="stage-card butterfly" onclick="openPopup('butterfly')" role="button" tabindex="0">
+        <span class="stage-emoji">🦋</span>
+        <div class="stage-name">Kupu-Kupu</div>
+        <div class="stage-tap">👆 Ketuk untuk belajar!</div>
+      </div>
+    </div>
+  </div>
+  <div class="nav-bar">
+    <button class="btn btn-home" onclick="goTo(0)">🏠 Beranda</button>
+    <button class="btn btn-next" onclick="goTo(2)">🌸 Selanjutnya →</button>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- SLIDE 2: GAME 1 - DRAG DROP -->
+<!-- ========================================== -->
+<div class="slide" id="slide-2">
+  <div class="content">
+    <div class="step-indicator" id="si2"></div>
+    <div class="section-emoji-title">🎮 Game 1: Susun Urutan Metamorfosis!</div>
+    <div class="section-desc">Geser kartu ke kotak yang benar! Mulai dari no. 1 sampai 4 🌟</div>
+    <div class="drag-instruction">💡 Tarik kartu di bawah ke dalam kotak bernomor yang sesuai!</div>
+
+    <div class="drag-items" id="dragItems">
+      <div class="drag-card" draggable="true" data-id="caterpillar" id="dc-caterpillar"
+           ondragstart="onDragStart(event)" ontouchstart="onTouchStart(event)" ontouchmove="onTouchMove(event)" ontouchend="onTouchEnd(event)">
+        <span class="drag-emoji">🐛</span>
+        <div class="drag-label">Ulat</div>
+      </div>
+      <div class="drag-card" draggable="true" data-id="butterfly" id="dc-butterfly"
+           ondragstart="onDragStart(event)" ontouchstart="onTouchStart(event)" ontouchmove="onTouchMove(event)" ontouchend="onTouchEnd(event)">
+        <span class="drag-emoji">🦋</span>
+        <div class="drag-label">Kupu-Kupu</div>
+      </div>
+      <div class="drag-card" draggable="true" data-id="egg" id="dc-egg"
+           ondragstart="onDragStart(event)" ontouchstart="onTouchStart(event)" ontouchmove="onTouchMove(event)" ontouchend="onTouchEnd(event)">
+        <span class="drag-emoji">🥚</span>
+        <div class="drag-label">Telur</div>
+      </div>
+      <div class="drag-card" draggable="true" data-id="cocoon" id="dc-cocoon"
+           ondragstart="onDragStart(event)" ontouchstart="onTouchStart(event)" ontouchmove="onTouchMove(event)" ontouchend="onTouchEnd(event)">
+        <span class="drag-emoji">🟤</span>
+        <div class="drag-label">Kepompong</div>
+      </div>
+    </div>
+
+    <div class="drop-zone-row">
+      <div class="drop-zone" id="dz-1" data-pos="1"
+           ondragover="onDragOver(event)" ondrop="onDrop(event)" ondragleave="onDragLeave(event)">
+        <span class="zone-num">1</span>
+        <span style="font-size:1.8rem; color:var(--lavender);">?</span>
+      </div>
+      <div class="drop-zone" id="dz-2" data-pos="2"
+           ondragover="onDragOver(event)" ondrop="onDrop(event)" ondragleave="onDragLeave(event)">
+        <span class="zone-num">2</span>
+        <span style="font-size:1.8rem; color:var(--lavender);">?</span>
+      </div>
+      <div class="drop-zone" id="dz-3" data-pos="3"
+           ondragover="onDragOver(event)" ondrop="onDrop(event)" ondragleave="onDragLeave(event)">
+        <span class="zone-num">3</span>
+        <span style="font-size:1.8rem; color:var(--lavender);">?</span>
+      </div>
+      <div class="drop-zone" id="dz-4" data-pos="4"
+           ondragover="onDragOver(event)" ondrop="onDrop(event)" ondragleave="onDragLeave(event)">
+        <span class="zone-num">4</span>
+        <span style="font-size:1.8rem; color:var(--lavender);">?</span>
+      </div>
+    </div>
+
+    <button class="g1-btn-check" onclick="checkGame1()">✅ Periksa Jawabanku!</button>
+    <div class="feedback" id="g1-feedback"></div>
+  </div>
+  <div class="nav-bar">
+    <button class="btn btn-home" onclick="goTo(0)">🏠 Beranda</button>
+    <button class="btn btn-next" onclick="goTo(3)">🌸 Selanjutnya →</button>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- SLIDE 3: GAME 2 - FIND MISSING -->
+<!-- ========================================== -->
+<div class="slide" id="slide-3">
+  <div class="content">
+    <div class="step-indicator" id="si3"></div>
+    <div class="section-emoji-title">🔍 Game 2: Cari Tahap yang Hilang!</div>
+    <div class="section-desc">Pilih jawaban yang tepat untuk melengkapi urutan 🌟</div>
+
+    <div class="quiz-progress" id="quizProgress"></div>
+    <div class="score-display" id="scoreDisplay"></div>
+
+    <div class="quiz-card" id="quizCard">
+      <div class="quiz-qnum" id="quizQnum"></div>
+      <div class="quiz-question">Manakah tahap yang hilang?</div>
+      <div class="quiz-sequence" id="quizSeq"></div>
+      <div class="quiz-options" id="quizOpts"></div>
+    </div>
+
+    <div class="feedback" id="g2-feedback"></div>
+  </div>
+  <div class="nav-bar">
+    <button class="btn btn-home" onclick="goTo(0)">🏠 Beranda</button>
+    <button class="btn btn-next" id="g2-next-btn" onclick="goTo(4)" style="display:none">🌸 Selanjutnya →</button>
+    <button class="btn btn-next" id="g2-skip-btn" onclick="goTo(4)">⏩ Lewati</button>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- SLIDE 4: GAME 3 - AYO JAGA -->
+<!-- ========================================== -->
+<div class="slide" id="slide-4">
+  <div class="content">
+    <div class="step-indicator" id="si4"></div>
+    <div class="section-emoji-title">💚 Game 3: Ayo Jaga Kupu-Kupu!</div>
+    <div class="section-desc">Pilih perilaku yang BAIK untuk menjaga kupu-kupu dan lingkungan 🌱</div>
+    <div class="drag-instruction">👆 Pilih semua perilaku yang baik, lalu tekan tombol periksa!</div>
+
+    <div class="g3-cards" id="g3Cards">
+      <div class="g3-card" id="g3-0" onclick="toggleG3(0)">
+        <div class="g3-emoji">🌷</div>
+        <div class="g3-label">Menyiram tanaman</div>
+      </div>
+      <div class="g3-card" id="g3-1" onclick="toggleG3(1)">
+        <div class="g3-emoji">🌱</div>
+        <div class="g3-label">Menanam bunga</div>
+      </div>
+      <div class="g3-card" id="g3-2" onclick="toggleG3(2)">
+        <div class="g3-emoji">🎣</div>
+        <div class="g3-label">Menangkap kupu-kupu</div>
+      </div>
+      <div class="g3-card" id="g3-3" onclick="toggleG3(3)">
+        <div class="g3-emoji">😤</div>
+        <div class="g3-label">Memetik bunga sembarangan</div>
+      </div>
+    </div>
+
+    <button class="g3-check-btn" onclick="checkGame3()">💚 Periksa Jawabanku!</button>
+    <div class="feedback" id="g3-feedback"></div>
+  </div>
+  <div class="nav-bar">
+    <button class="btn btn-home" onclick="goTo(0)">🏠 Beranda</button>
+    <button class="btn btn-next" onclick="goTo(5)">🌸 Selanjutnya →</button>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- SLIDE 5: PESAN KARAKTER -->
+<!-- ========================================== -->
+<div class="slide" id="slide-5">
+  <div class="content">
+    <div class="step-indicator" id="si5"></div>
+    <div class="section-emoji-title">🕌 Pesan Indah untuk Kita</div>
+
+    <div class="char-cloud">
+      <div style="font-size:2.5rem; margin-bottom: 12px;">☀️ 🦋 🌸</div>
+      <div class="char-text">
+        "Allah menciptakan kupu-kupu dan tumbuhan untuk kita jaga bersama.<br><br>
+        Kita harus <strong>menyayangi semua makhluk hidup</strong> agar dunia tetap indah dan penuh warna! 🌈"
+      </div>
+    </div>
+
+    <div class="char-icons">
+      <span class="char-icon">😊</span>
+      <span class="char-icon">🦋</span>
+      <span class="char-icon">🌺</span>
+      <span class="char-icon">🌸</span>
+      <span class="char-icon">💚</span>
+    </div>
+
+    <div style="background: white; border-radius: 24px; padding: 20px; margin-top: 20px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 3px solid var(--lavender-light);">
+      <div style="font-size: 1rem; font-weight: 700; color: var(--text-mid); line-height: 1.8;">
+        🌸 Kupu-kupu membantu bunga berkembang.<br>
+        🌱 Bunga memberi makan kupu-kupu.<br>
+        🤝 Kita bisa membantu keduanya dengan menjaga alam!
+      </div>
+    </div>
+  </div>
+  <div class="nav-bar">
+    <button class="btn btn-home" onclick="goTo(0)">🏠 Beranda</button>
+    <button class="btn btn-next" onclick="goTo(6)">🎓 Sertifikat →</button>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- SLIDE 6: SERTIFIKAT -->
+<!-- ========================================== -->
+<div class="slide" id="slide-6">
+  <div class="content cert-wrap">
+    <div class="step-indicator" id="si6"></div>
+    <div class="section-emoji-title">🎓 Sertifikat Mini!</div>
+    <div class="section-desc">Masukkan namamu, lalu lihat sertifikatmu! 🌟</div>
+
+    <input type="text" class="cert-name-input" id="certNameInput" placeholder="✏️ Tulis namamu di sini..."
+           oninput="updateCertName()" maxlength="30">
+
+    <div id="certPlaceholder" style="text-align:center; font-size:1rem; font-weight:700; color:var(--text-mid); margin-bottom:16px;">
+      👆 Masukkan namamu untuk melihat sertifikat!
+    </div>
+
+    <button class="btn btn-cert" onclick="showCert()" style="margin-bottom:16px; font-size:1.1rem; padding:14px 30px;">🌸 Lihat Sertifikat</button>
+
+    <div class="certificate" id="certificate">
+      <div class="cert-border"></div>
+      <div class="cert-border-inner"></div>
+      <div class="cert-flying-butterfly">🦋</div>
+      <span class="cert-bg-flower" style="top:5px;left:5px;font-size:2.5rem;">🌸</span>
+      <span class="cert-bg-flower" style="top:5px;right:5px;font-size:2.5rem;text-align:right;">🌸</span>
+      <span class="cert-bg-flower" style="bottom:5px;left:5px;font-size:2.5rem;">🌼</span>
+      <span class="cert-bg-flower" style="bottom:5px;right:5px;font-size:2.5rem;">🌼</span>
+
+      <div style="position:relative; z-index:1; padding:8px 0;">
+        <div style="font-size:1rem; font-weight:700; color:var(--text-mid); margin-bottom:4px;">🌸 Sertifikat Mini 🌸</div>
+        <div class="cert-hero">🦋</div>
+        <div class="cert-title">Selamat! 🎉</div>
+        <div style="font-size:1rem; font-weight:700; color:var(--text-mid); margin: 4px 0 8px;">Diberikan kepada:</div>
+        <div class="cert-name-display" id="certNameDisplay">Nama Anak</div>
+        <div class="cert-subtitle">Kamu Hebat Belajar Metamorfosis Kupu-Kupu! 🌟</div>
+        <div class="cert-stars">⭐⭐⭐⭐⭐</div>
+        <div style="font-size:0.85rem; font-weight:700; color:var(--text-mid); margin-top:8px;">
+          🌸 Tetap sayangi kupu-kupu dan alam kita! 🌸
+        </div>
+        <div style="margin-top:12px; font-size:2rem;">🦋 🌸 🌼 🌺 🦋</div>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:16px;">
+      <button class="btn btn-cert" onclick="showCert()">🌸 Lihat Sertifikat</button>
+      <button class="btn btn-print" onclick="printCert()">🖨️ Cetak Sertifikat</button>
+    </div>
+
+    <button class="btn btn-start" onclick="goTo(0)" style="margin-top:16px; font-size:1rem;">🏠 Mulai Lagi</button>
+  </div>
+  <div class="nav-bar">
+    <button class="btn btn-home" onclick="goTo(0)">🏠 Beranda</button>
+  </div>
+</div>
+
+<script>
+// ===== AUDIO CONTEXT =====
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function playClick() {
+  try {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.frequency.setValueAtTime(800, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.08);
+    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+    osc.start(); osc.stop(ctx.currentTime + 0.15);
+  } catch(e) {}
+}
+
+function playSuccess() {
+  try {
+    const ctx = getAudioCtx();
+    const notes = [523, 659, 784, 1047];
+    notes.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.18, ctx.currentTime + i * 0.12);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.12 + 0.25);
+      osc.start(ctx.currentTime + i * 0.12);
+      osc.stop(ctx.currentTime + i * 0.12 + 0.25);
+    });
+  } catch(e) {}
+}
+
+function playError() {
+  try {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.frequency.setValueAtTime(300, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.3);
+    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+    osc.start(); osc.stop(ctx.currentTime + 0.3);
+  } catch(e) {}
+}
+
+// ===== STEP INDICATOR =====
+const TOTAL_SLIDES = 7;
+function buildStepIndicator(containerId, current) {
+  const c = document.getElementById(containerId);
+  if (!c) return;
+  c.innerHTML = '';
+  for (let i = 0; i < TOTAL_SLIDES; i++) {
+    const d = document.createElement('div');
+    d.className = 'step-dot' + (i === current ? ' active' : '');
+    c.appendChild(d);
+  }
+}
+
+// ===== NAVIGATION =====
+let currentSlide = 0;
+function goTo(n) {
+  playClick();
+  document.getElementById('slide-' + currentSlide).classList.remove('active');
+  currentSlide = n;
+  const s = document.getElementById('slide-' + n);
+  s.classList.add('active');
+  window.scrollTo(0, 0);
+  if (n === 3) initGame2();
+  buildStepIndicator('si' + n, n);
+}
+
+// ===== POPUP DATA =====
+const stageData = {
+  egg: {
+    emoji: '🥚',
+    title: '🥚 Telur',
+    text: 'Halo, aku telur kupu-kupu! Aku menempel di daun hijau yang segar dan menunggu untuk menetas. Tunggu sebentar ya! 😊',
+    color: '#FFF9E0', border: '#FFE566'
+  },
+  caterpillar: {
+    emoji: '🐛',
+    title: '🐛 Ulat',
+    text: 'Halo, aku ulat! Aku makan daun setiap hari agar tumbuh besar dan kuat. Crunch crunch crunch! 😋',
+    color: '#E8FCE8', border: '#90D870'
+  },
+  cocoon: {
+    emoji: '🪺',
+    title: '🟤 Kepompong',
+    text: 'Halo, aku kepompong! Aku sedang tidur di dalam dan berubah menjadi kupu-kupu yang cantik. Sedikit lagi! 😴',
+    color: '#F5F0E0', border: '#D4B88A'
+  },
+  butterfly: {
+    emoji: '🦋',
+    title: '🦋 Kupu-Kupu',
+    text: 'Halo, aku kupu-kupu! Sekarang aku bisa terbang bebas dan membantu bunga-bunga agar tetap cantik. Wheee! 🌸',
+    color: '#FFE8F0', border: '#FFB3C6'
+  }
+};
+
+function openPopup(type) {
+  playClick();
+  const d = stageData[type];
+  const box = document.getElementById('popupBox');
+  document.getElementById('popupEmoji').textContent = d.emoji;
+  document.getElementById('popupTitle').textContent = d.title;
+  document.getElementById('popupText').textContent = d.text;
+  box.style.background = d.color;
+  box.style.borderColor = d.border;
+  document.getElementById('popup').classList.add('show');
+
+  // TTS
+  if ('speechSynthesis' in window) {
+    const u = new SpeechSynthesisUtterance(d.text);
+    u.lang = 'id-ID'; u.rate = 0.85; u.pitch = 1.2; u.volume = 0.9;
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+  }
+}
+
+function closePopup(e) {
+  if (e && e.target !== document.getElementById('popup') && e.type !== 'click') return;
+  playClick();
+  document.getElementById('popup').classList.remove('show');
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
+}
+
+// ===== GAME 1: DRAG & DROP =====
+let draggingId = null;
+let dropZones = {};
+const correctOrder = ['egg', 'caterpillar', 'cocoon', 'butterfly'];
+const stageInfo = {
+  egg: { emoji: '🥚', label: 'Telur' },
+  caterpillar: { emoji: '🐛', label: 'Ulat' },
+  cocoon: { emoji: '🟤', label: 'Kepompong' },
+  butterfly: { emoji: '🦋', label: 'Kupu-Kupu' }
+};
+
+function onDragStart(e) {
+  draggingId = e.currentTarget.dataset.id;
+  e.currentTarget.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+
+function onDragOver(e) {
+  e.preventDefault();
+  e.currentTarget.classList.add('dragover');
+}
+
+function onDragLeave(e) { e.currentTarget.classList.remove('dragover'); }
+
+function onDrop(e) {
+  e.preventDefault();
+  const zone = e.currentTarget;
+  zone.classList.remove('dragover');
+  if (!draggingId) return;
+
+  const pos = zone.dataset.pos;
+
+  // Remove from previous zone if placed
+  Object.entries(dropZones).forEach(([p, id]) => {
+    if (id === draggingId && p !== pos) {
+      const prev = document.getElementById('dz-' + p);
+      prev.innerHTML = '<span class="zone-num">' + p + '</span><span style="font-size:1.8rem;color:var(--lavender);">?</span>';
+      prev.classList.remove('filled');
+      delete dropZones[p];
+      // Show card back
+      const card = document.getElementById('dc-' + draggingId);
+      if (card) card.style.display = '';
+    }
+  });
+
+  // Place new item
+  const info = stageInfo[draggingId];
+  zone.innerHTML = '<span class="zone-num">' + pos + '</span><span class="placed-emoji">' + info.emoji + '</span><div class="placed-label">' + info.label + '</div>';
+  zone.classList.add('filled');
+  dropZones[pos] = draggingId;
+
+  // Hide source card
+  const card = document.getElementById('dc-' + draggingId);
+  if (card) card.style.display = 'none';
+
+  // Clear dragging
+  document.querySelectorAll('.drag-card').forEach(c => c.classList.remove('dragging'));
+  draggingId = null;
+  playClick();
+}
+
+// Touch drag
+let touchCard = null, touchClone = null;
+function onTouchStart(e) {
+  touchCard = e.currentTarget;
+  draggingId = touchCard.dataset.id;
+  const rect = touchCard.getBoundingClientRect();
+  touchClone = touchCard.cloneNode(true);
+  touchClone.style.position = 'fixed';
+  touchClone.style.width = rect.width + 'px';
+  touchClone.style.opacity = '0.85';
+  touchClone.style.zIndex = '999';
+  touchClone.style.pointerEvents = 'none';
+  touchClone.style.top = rect.top + 'px';
+  touchClone.style.left = rect.left + 'px';
+  document.body.appendChild(touchClone);
+  touchCard.style.opacity = '0.4';
+}
+
+function onTouchMove(e) {
+  e.preventDefault();
+  const t = e.touches[0];
+  touchClone.style.left = (t.clientX - touchClone.offsetWidth / 2) + 'px';
+  touchClone.style.top = (t.clientY - touchClone.offsetHeight / 2) + 'px';
+
+  document.querySelectorAll('.drop-zone').forEach(z => z.classList.remove('dragover'));
+  const el = document.elementFromPoint(t.clientX, t.clientY);
+  const zone = el && el.closest('.drop-zone');
+  if (zone) zone.classList.add('dragover');
+}
+
+function onTouchEnd(e) {
+  const t = e.changedTouches[0];
+  document.body.removeChild(touchClone);
+  touchClone = null;
+  if (touchCard) touchCard.style.opacity = '';
+
+  document.querySelectorAll('.drop-zone').forEach(z => z.classList.remove('dragover'));
+
+  const el = document.elementFromPoint(t.clientX, t.clientY);
+  const zone = el && el.closest('.drop-zone');
+  if (zone && draggingId) {
+    // Fake drop event
+    const fakeEvent = { preventDefault: ()=>{}, currentTarget: zone };
+    onDrop(fakeEvent);
+  }
+  touchCard = null;
+  draggingId = null;
+}
+
+function checkGame1() {
+  playClick();
+  const fb = document.getElementById('g1-feedback');
+  const allFilled = Object.keys(dropZones).length === 4;
+
+  if (!allFilled) {
+    fb.textContent = '😊 Masukkan semua kartu ke dalam kotak dulu ya!';
+    fb.className = 'feedback error show';
+    return;
+  }
+
+  const correct = correctOrder.every((id, i) => dropZones[i + 1] === id);
+  if (correct) {
+    playSuccess();
+    fb.innerHTML = '🎉 Hebat! Kamu berhasil membantu kupu-kupu tumbuh! 🦋✨';
+    fb.className = 'feedback success show';
+    launchConfetti();
+    flyButterflies();
+  } else {
+    playError();
+    fb.textContent = '😊 Coba lagi ya, pasti bisa! Telur → Ulat → Kepompong → Kupu-Kupu';
+    fb.className = 'feedback error show';
+    // Reset after delay
+    setTimeout(resetGame1, 2500);
+  }
+}
+
+function resetGame1() {
+  dropZones = {};
+  ['egg', 'caterpillar', 'cocoon', 'butterfly'].forEach(id => {
+    const card = document.getElementById('dc-' + id);
+    if (card) card.style.display = '';
+  });
+  for (let i = 1; i <= 4; i++) {
+    const z = document.getElementById('dz-' + i);
+    z.innerHTML = '<span class="zone-num">' + i + '</span><span style="font-size:1.8rem;color:var(--lavender);">?</span>';
+    z.classList.remove('filled');
+  }
+}
+
+// ===== GAME 2: QUIZ =====
+const quizData = [
+  {
+    sequence: ['Telur', null, 'Kepompong', 'Kupu-Kupu'],
+    answer: 'Ulat',
+    options: ['Ulat 🐛', 'Bunga 🌸', 'Pohon 🌳'],
+    answerIdx: 0
+  },
+  {
+    sequence: [null, 'Ulat', 'Kepompong', 'Kupu-Kupu'],
+    answer: 'Telur',
+    options: ['Bunga 🌸', 'Telur 🥚', 'Rumput 🌿'],
+    answerIdx: 1
+  },
+  {
+    sequence: ['Telur', 'Ulat', null, 'Kupu-Kupu'],
+    answer: 'Kepompong',
+    options: ['Daun 🍃', 'Hujan 🌧️', 'Kepompong 🟤'],
+    answerIdx: 2
+  },
+  {
+    sequence: ['Telur', 'Ulat', 'Kepompong', null],
+    answer: 'Kupu-Kupu',
+    options: ['Kupu-Kupu 🦋', 'Batu 🪨', 'Awan ☁️'],
+    answerIdx: 0
+  },
+  {
+    sequence: [null, 'Ulat', 'Kepompong', 'Kupu-Kupu'],
+    answer: 'Telur',
+    options: ['Matahari ☀️', 'Bintang ⭐', 'Telur 🥚'],
+    answerIdx: 2
+  }
+];
+
+let quizCurrent = 0;
+let quizScore = 0;
+let quizAnswered = [];
+
+function initGame2() {
+  quizCurrent = 0; quizScore = 0; quizAnswered = [];
+  buildQuizProgress();
+  buildScoreDisplay();
+  loadQuestion();
+}
+
+function buildQuizProgress() {
+  const c = document.getElementById('quizProgress');
+  c.innerHTML = '';
+  quizData.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'quiz-dot';
+    d.id = 'qdot-' + i;
+    c.appendChild(d);
+  });
+}
+
+function buildScoreDisplay() {
+  const c = document.getElementById('scoreDisplay');
+  c.innerHTML = '';
+  for (let i = 0; i < quizData.length; i++) {
+    const s = document.createElement('span');
+    s.className = 'score-star';
+    s.id = 'star-' + i;
+    s.textContent = '⭐';
+    s.style.opacity = '0.3';
+    c.appendChild(s);
+  }
+}
+
+function loadQuestion() {
+  const q = quizData[quizCurrent];
+  document.getElementById('quizQnum').textContent = 'Soal ' + (quizCurrent + 1) + ' dari ' + quizData.length;
+
+  const seq = document.getElementById('quizSeq');
+  seq.innerHTML = '';
+  const emojis = { 'Telur': '🥚', 'Ulat': '🐛', 'Kepompong': '🟤', 'Kupu-Kupu': '🦋' };
+  q.sequence.forEach((item, i) => {
+    if (i > 0) {
+      const arrow = document.createElement('div');
+      arrow.className = 'quiz-arrow'; arrow.textContent = '→';
+      seq.appendChild(arrow);
+    }
+    const stage = document.createElement('div');
+    if (item === null) {
+      stage.className = 'quiz-stage missing';
+      stage.textContent = '?';
+    } else {
+      stage.className = 'quiz-stage';
+      stage.textContent = (emojis[item] || '') + ' ' + item;
+    }
+    seq.appendChild(stage);
+  });
+
+  const opts = document.getElementById('quizOpts');
+  opts.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-opt';
+    btn.textContent = opt;
+    btn.onclick = () => answerQuiz(i);
+    opts.appendChild(btn);
+  });
+
+  document.getElementById('g2-feedback').className = 'feedback';
+}
+
+function answerQuiz(chosen) {
+  const q = quizData[quizCurrent];
+  const fb = document.getElementById('g2-feedback');
+  const optBtns = document.querySelectorAll('.quiz-opt');
+
+  optBtns.forEach(b => b.onclick = null);
+  optBtns[q.answerIdx].classList.add('correct-ans');
+
+  if (chosen === q.answerIdx) {
+    playSuccess();
+    fb.innerHTML = '🦋 Pintar sekali! Kamu benar! ⭐';
+    fb.className = 'feedback success show';
+    quizScore++;
+    const star = document.getElementById('star-' + quizCurrent);
+    star.style.opacity = '1'; star.classList.add('earned');
+    document.getElementById('qdot-' + quizCurrent).className = 'quiz-dot correct';
+  } else {
+    playError();
+    optBtns[chosen].classList.add('wrong-ans');
+    fb.innerHTML = '😊 Ayo coba lagi! Jawaban yang benar adalah: ' + q.answer;
+    fb.className = 'feedback error show';
+    document.getElementById('qdot-' + quizCurrent).className = 'quiz-dot wrong';
+  }
+
+  setTimeout(() => {
+    quizCurrent++;
+    if (quizCurrent < quizData.length) {
+      loadQuestion();
+    } else {
+      showQuizResult();
+    }
+  }, 1800);
+}
+
+function showQuizResult() {
+  const fb = document.getElementById('g2-feedback');
+  if (quizScore === quizData.length) {
+    playSuccess();
+    fb.innerHTML = '🎉 Luar biasa! Kamu menjawab semua benar! 🌟🌟🌟';
+    fb.className = 'feedback success show';
+    launchConfetti();
+  } else {
+    fb.innerHTML = '👏 Bagus! Kamu mendapat ' + quizScore + ' dari ' + quizData.length + ' bintang! 🌟';
+    fb.className = 'feedback success show';
+  }
+  document.getElementById('g2-next-btn').style.display = '';
+  document.getElementById('g2-skip-btn').style.display = 'none';
+}
+
+// ===== GAME 3 =====
+const g3Correct = [0, 1]; // indices 0,1 are correct
+let g3Selected = new Set();
+
+function toggleG3(idx) {
+  playClick();
+  const card = document.getElementById('g3-' + idx);
+  if (g3Selected.has(idx)) {
+    g3Selected.delete(idx);
+    card.classList.remove('selected');
+  } else {
+    g3Selected.add(idx);
+    card.classList.add('selected');
+  }
+}
+
+function checkGame3() {
+  playClick();
+  const fb = document.getElementById('g3-feedback');
+
+  const selectedCorrect = g3Correct.every(i => g3Selected.has(i));
+  const noWrong = ![2, 3].some(i => g3Selected.has(i));
+
+  // Show visual feedback on each card
+  g3Selected.forEach(idx => {
+    const card = document.getElementById('g3-' + idx);
+    card.classList.remove('selected');
+    if (g3Correct.includes(idx)) {
+      card.classList.add('correct-pick');
+    } else {
+      card.classList.add('wrong-pick');
+    }
+  });
+
+  if (selectedCorrect && noWrong && g3Selected.size === 2) {
+    playSuccess();
+    fb.innerHTML = '🌸 Hebat! Kamu sudah menyayangi ciptaan Allah dan menjaga lingkungan! 💚🦋';
+    fb.className = 'feedback success show';
+    launchConfetti();
+    flyButterflies();
+  } else {
+    playError();
+    fb.innerHTML = '😊 Yuk, kita sayangi kupu-kupu dan bunga agar tetap tumbuh dengan baik! Coba lagi ya!';
+    fb.className = 'feedback error show';
+    setTimeout(resetGame3, 2500);
+  }
+}
+
+function resetGame3() {
+  g3Selected = new Set();
+  for (let i = 0; i < 4; i++) {
+    const card = document.getElementById('g3-' + i);
+    card.className = 'g3-card';
+  }
+  document.getElementById('g3-feedback').className = 'feedback';
+}
+
+// ===== CERTIFICATE =====
+function updateCertName() {
+  const name = document.getElementById('certNameInput').value;
+  document.getElementById('certNameDisplay').textContent = name || 'Nama Anak';
+}
+
+function showCert() {
+  playSuccess();
+  const name = document.getElementById('certNameInput').value.trim();
+  if (!name) {
+    document.getElementById('certNameInput').placeholder = '⚠️ Masukkan namamu dulu!';
+    document.getElementById('certNameInput').style.borderColor = '#FF8888';
+    return;
+  }
+  document.getElementById('certNameDisplay').textContent = name;
+  document.getElementById('certificate').classList.add('show');
+  document.getElementById('certPlaceholder').style.display = 'none';
+  launchConfetti();
+  // Floating stars
+  for (let i = 0; i < 15; i++) {
+    setTimeout(() => spawnStar(), i * 120);
+  }
+}
+
+function spawnStar() {
+  const s = document.createElement('div');
+  s.className = 'cert-floating-star';
+  s.textContent = ['⭐','🌟','✨'][Math.floor(Math.random()*3)];
+  s.style.left = Math.random() * 90 + 'vw';
+  s.style.top = (50 + Math.random() * 40) + 'vh';
+  document.body.appendChild(s);
+  setTimeout(() => s.remove(), 1500);
+}
+
+function printCert() {
+  const cert = document.getElementById('certificate');
+  if (!cert.classList.contains('show')) { showCert(); return; }
+  window.print();
+}
+
+// ===== EFFECTS =====
+function launchConfetti() {
+  const colors = ['#FFB3C6','#FFE566','#B8F0D8','#D4B8E0','#FFCBA4','#C8E8FF'];
+  for (let i = 0; i < 60; i++) {
+    setTimeout(() => {
+      const c = document.createElement('div');
+      c.className = 'confetti-piece';
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.top = '-20px';
+      c.style.background = colors[Math.floor(Math.random() * colors.length)];
+      c.style.transform = `rotate(${Math.random()*360}deg)`;
+      c.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 3500);
+    }, i * 40);
+  }
+}
+
+function flyButterflies() {
+  for (let i = 0; i < 8; i++) {
+    setTimeout(() => {
+      const b = document.createElement('div');
+      b.textContent = '🦋';
+      b.style.cssText = `position:fixed;font-size:${1.5+Math.random()*1.5}rem;pointer-events:none;z-index:300;
+        top:${20+Math.random()*60}%;left:-40px;
+        animation:flyAcross ${2+Math.random()*2}s ease-in-out forwards;`;
+      document.body.appendChild(b);
+      const style = document.createElement('style');
+      style.textContent = `@keyframes flyAcross{from{left:-40px}to{left:110%}}`;
+      document.head.appendChild(style);
+      setTimeout(() => { b.remove(); }, 4000);
+    }, i * 300);
+  }
+}
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', () => {
+  buildStepIndicator('si1', 1);
+});
+
+// ===== PWA: Register Service Worker =====
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then((reg) => console.log('[PWA] SW registered:', reg.scope))
+      .catch((err) => console.warn('[PWA] SW registration failed:', err));
+  });
+}
+</script>
+</body>
+</html>
