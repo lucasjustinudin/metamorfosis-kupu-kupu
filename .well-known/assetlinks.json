@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.lucasjustinudin.kupu",
+    "sha256_cert_fingerprints": ["B1:17:40:8B:67:F5:4D:03:6F:A3:0B:65:5A:75:6C:69:7D:DD:81:21:57:6C:E4:36:41:24:2F:5A:A1:AC:62:A7"]
+  }
+}]
